@@ -1,35 +1,31 @@
 package com.emergency.service;
 
-import com.emergency.model.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import com.emergency.model.Ambulance;
+import com.emergency.model.EmergencyRequest;
+import com.emergency.exception.ResourceUnavailableException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DispatchServiceTest {
-    private DispatchService dispatchService;
+public class DispatchService {
+    private List<Ambulance> ambulances = new ArrayList<>();
+    private List<String> historyLog = new ArrayList<>();
 
-    @BeforeEach
-    public void setUp() {
-        dispatchService = new DispatchService();
+    public void registerAmbulance(Ambulance ambulance) {
+        if (ambulance == null) {
+            throw new ResourceUnavailableException("Cannot register a null ambulance resource.");
+        }
+        ambulances.add(ambulance);
+        historyLog.add("Ambulance registered: " + ambulance.getId());
     }
 
-    @Test
-    public void testEmergencySystemWorkflow() {
-        // 1. Initialize an Ambulance using your exact code requirement (String, AmbulanceType, String, double, double)
-        Ambulance amb = new Ambulance("AMB-01", AmbulanceType.BASIC, "John Doe", 12.9716, 79.1588);
-        dispatchService.registerAmbulance(amb);
+    public void submitEmergencyRequest(EmergencyRequest request) {
+        if (request == null) {
+            throw new ResourceUnavailableException("Invalid or empty emergency request payload.");
+        }
+        historyLog.add("Emergency Request received: " + request.getId());
+    }
 
-        // 2. Submit an Emergency Request using the parameters specified by your engine
-        // Using high/critical designations matching your specific model definition
-        EmergencyRequest req = new EmergencyRequest("REQ-01", "P-100", com.emergency.model.Priority.CRITICAL, "Location-A", "Hospital-X");
-        dispatchService.submitEmergencyRequest(req);
-
-        // 3. Verify that the operation was captured by the historical tracking ledger
-        List<String> logs = dispatchService.getHistoryLog();
-        assertNotNull(logs, "History log must be initialized.");
-        
-        boolean hasActivity = !logs.isEmpty();
-        assertTrue(hasActivity, "The application must record emergency tracking history logs.");
+    public List<String> getHistoryLog() {
+        return historyLog;
     }
 }
