@@ -1,12 +1,16 @@
 package com.emergency.service;
 
-import com.emergency.model.Ambulance;
-import com.emergency.model.AmbulanceType;
-import com.emergency.model.EmergencyRequest;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.List;
+
+import com.emergency.model.Ambulance;
+import com.emergency.model.AmbulanceType;
+import com.emergency.model.EmergencyPriority;
+import com.emergency.model.EmergencyRequest;
 
 public class DispatchServiceTest {
     private DispatchService dispatchService;
@@ -18,12 +22,21 @@ public class DispatchServiceTest {
 
     @Test
     public void testEmergencySystemWorkflow() {
-        // 1. Initialize an Ambulance using your exact constructor signature (String, AmbulanceType, String, double, double)
+        // 1. Initialize Ambulance matching: (String, AmbulanceType, String, double, double)
         Ambulance amb = new Ambulance("AMB-01", AmbulanceType.BASIC, "John Doe", 12.9716, 79.1588);
         dispatchService.registerAmbulance(amb);
 
-        // 2. Submit an Emergency Request 
-        EmergencyRequest req = new EmergencyRequest("REQ-01", "P-100", "CRITICAL", "Location-A", "Hospital-X");
+        // 2. Initialize EmergencyRequest matching your exact signature:
+        // (String, String, EmergencyPriority, AmbulanceType, double, double, String)
+        EmergencyRequest req = new EmergencyRequest(
+            "REQ-01", 
+            "Medical", 
+            EmergencyPriority.CRITICAL, 
+            AmbulanceType.BASIC, 
+            12.9720, 
+            79.1595, 
+            "City Hospital"
+        );
         dispatchService.submitEmergencyRequest(req);
 
         // 3. Verify that the operation was captured by the tracking ledger
@@ -32,4 +45,3 @@ public class DispatchServiceTest {
         assertFalse(logs.isEmpty(), "The application must record emergency tracking history logs.");
     }
 }
-
