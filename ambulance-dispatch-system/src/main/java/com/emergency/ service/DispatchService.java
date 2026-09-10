@@ -1,10 +1,11 @@
 package com.emergency.service;
 
-import com.emergency.model.Ambulance;
-import com.emergency.model.EmergencyRequest;
-import com.emergency.exception.ResourceUnavailableException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.emergency.exception.ResourceUnavailableException;
+import com.emergency.model.Ambulance;
+import com.emergency.model.EmergencyRequest;
 
 public class DispatchService {
     private List<Ambulance> ambulances = new ArrayList<>();
@@ -15,14 +16,14 @@ public class DispatchService {
             throw new ResourceUnavailableException("Cannot register a null ambulance resource.");
         }
         ambulances.add(ambulance);
-        historyLog.add("Ambulance registered: " + ambulance.getId());
+        historyLog.add("Ambulance registered successfully");
     }
 
     public void submitEmergencyRequest(EmergencyRequest request) {
         if (request == null) {
             throw new ResourceUnavailableException("Invalid or empty emergency request payload.");
         }
-        historyLog.add("Emergency Request received: " + request.getId());
+        historyLog.add("Emergency Request received and logged");
     }
 
     public List<String> getHistoryLog() {

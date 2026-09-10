@@ -1,0 +1,2 @@
+com\emergency\exception\InvalidRequestException.class
+com\emergency\exception\ResourceUnavailableException.class
